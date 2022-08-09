@@ -15,7 +15,6 @@ import { AppRedux } from "./redux";
 const App = () => {
   return (
     <AppRedux>
-      <ApolloClient>
         <AppErrorBoundary>
           <AppAuth>
             <AppTheme>
@@ -34,7 +33,6 @@ const App = () => {
             </AppTheme>
           </AppAuth>
         </AppErrorBoundary>
-      </ApolloClient>
     </AppRedux>
   );
 }
