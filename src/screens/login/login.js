@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { Button, TextField, Stack } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Stack,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { LocalStorageKeys } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../../router/routes";
 import { LoginSuccess } from "../../router/access";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +31,7 @@ export const Login = (props) => {
   const [state, setState] = useState({
     email: "",
     password: "",
+    showPassword: true,
   });
   const [error, setError] = useState([]);
 
@@ -42,8 +51,8 @@ export const Login = (props) => {
   };
 
   const onLogin = () => {
-    debugger
-    if(!validateForm()) return;
+    debugger;
+    if (!validateForm()) return;
     localStorage.setItem(LocalStorageKeys.authToken, "authtoken");
     navigate(AppRoutes.employeeTaskList);
   };
@@ -60,6 +69,17 @@ export const Login = (props) => {
       ...prevState,
       [key]: event.target.value,
     }));
+  };
+
+  const handleClickShowPassword = () => {
+    setState({
+      ...state,
+      showPassword: !state.showPassword,
+    });
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -86,10 +106,25 @@ export const Login = (props) => {
           label="Password"
           variant="outlined"
           required
+          type={state.showPassword ? "text" : "password"}
           value={state.password}
           onChange={(e) => handleChange(e, "password")}
           error={error.includes("password")}
           helperText={error.includes("password") && "Password is required"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {state.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
 
         <Button variant={"contained"} color={"primary"} onClick={onLogin}>
