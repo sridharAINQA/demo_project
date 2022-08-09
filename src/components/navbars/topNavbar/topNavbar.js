@@ -1,6 +1,13 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
-import { AppBar, Toolbar, IconButton, Typography, Drawer } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Drawer,
+  Stack,
+} from "@mui/material";
 import { MeetingRoom, Menu as MenuIcon } from "@mui/icons-material";
 import { LocalStorageKeys } from "../../../utils";
 import { SideNavBar } from "..";
@@ -71,17 +78,29 @@ export const TopNavBar = (props) => {
 
           <div className={classes.grow} />
 
-          <IconButton
-            aria-label="logout button"
-            aria-controls={"logout_button"}
-            aria-haspopup="true"
-            onClick={handleLogout}
-            color="inherit"
-            size="large"
-            title="logout"
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            gap={2}
           >
-            <MeetingRoom />
-          </IconButton>
+            <Stack>
+              <Typography variant="body1">Welcome,</Typography>
+              <Typography variant="body2">JohnDoe@gmail.com</Typography>
+            </Stack>
+
+            <IconButton
+              aria-label="logout button"
+              aria-controls={"logout_button"}
+              aria-haspopup="true"
+              onClick={handleLogout}
+              color="inherit"
+              size="large"
+              title="logout"
+            >
+              <MeetingRoom />
+            </IconButton>
+          </Stack>
 
           <Drawer
             open={state.openSideNavBar}

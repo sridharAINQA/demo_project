@@ -3,7 +3,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppRoutes } from "./routes";
 import PrivateRouter from "./privateRouter";
 
-import { NotFound, Home, Login, EmployeeTaskList, EmployeeTaskAddEdit } from "./../screens";
+import {
+  NotFound,
+  Home,
+  Login,
+  EmployeeTaskList,
+  EmployeeTaskAddEdit,
+  TaskLogs,
+} from "./../screens";
 
 const RouterApp = (props) => {
   return (
@@ -15,6 +22,16 @@ const RouterApp = (props) => {
           element={
             <PrivateRouter path={AppRoutes.home}>
               <Home />
+            </PrivateRouter>
+          }
+        />
+
+        {/* Admin - Task Logs */}
+        <Route
+          path={AppRoutes.taskLogs}
+          element={
+            <PrivateRouter path={AppRoutes.taskLogs}>
+              <TaskLogs />
             </PrivateRouter>
           }
         />

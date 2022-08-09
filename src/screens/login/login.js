@@ -9,7 +9,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { LocalStorageKeys } from "../../utils";
 import { useNavigate } from "react-router-dom";
-import { AppRoutes } from "../../router/routes";
+// import { AppRoutes } from "../../router/routes";
 import { LoginSuccess } from "../../router/access";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -54,12 +54,20 @@ export const Login = (props) => {
     debugger;
     if (!validateForm()) return;
     localStorage.setItem(LocalStorageKeys.authToken, "authtoken");
-    navigate(AppRoutes.employeeTaskList);
+    localStorage.setItem(LocalStorageKeys.role, "employee");
+
+    // debugger;
+
+    // if (localStorage.getItem(LocalStorageKeys.role) === "admin") {
+    //   navigate(AppRoutes.taskLogs);
+    // } else if (localStorage.getItem(LocalStorageKeys.role) === "employee") {
+    //   navigate(AppRoutes.employeeTaskList);
+    // }
   };
 
   React.useEffect(() => {
     if (localStorage.getItem(LocalStorageKeys.authToken)) {
-      navigate(LoginSuccess());
+      navigate(LoginSuccess(localStorage.getItem(LocalStorageKeys.role)));
     }
     console.log("here");
   });
