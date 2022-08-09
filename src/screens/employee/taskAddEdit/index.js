@@ -27,11 +27,11 @@ class EmployeeTaskAddEdit extends React.Component {
 
     this.setState({ error });
 
-    return error;
+    return error?.length === 0;
   };
 
   handleUpsert = () => {
-    this.validateForm(this.state);
+    this.validateForm();
   };
 
   handleChange = (event, key) => {
