@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { LocalStorageKeys } from "../../utils";
+import { LocalStorageKeys, UserRoles } from "../../utils";
 import { useNavigate } from "react-router-dom";
 // import { AppRoutes } from "../../router/routes";
 import { LoginSuccess } from "../../router/access";
@@ -31,7 +31,7 @@ export const Login = (props) => {
   const [state, setState] = useState({
     email: "",
     password: "",
-    showPassword: true,
+    showPassword: false,
   });
   const [error, setError] = useState([]);
 
@@ -54,7 +54,12 @@ export const Login = (props) => {
     debugger;
     if (!validateForm()) return;
     localStorage.setItem(LocalStorageKeys.authToken, "authtoken");
-    localStorage.setItem(LocalStorageKeys.role, "employee");
+
+    if (state.email === "admin@gmail.com") {
+      localStorage.setItem(LocalStorageKeys.role, UserRoles.admin);
+    } else {
+      localStorage.setItem(LocalStorageKeys.role, UserRoles.employee);
+    }
 
     // debugger;
 
