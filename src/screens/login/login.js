@@ -20,7 +20,7 @@ export const Login = props => {
 
     const onLogin = () => {
         localStorage.setItem(LocalStorageKeys.authToken, "authtoken");
-        navigate(AppRoutes.home);
+        navigate(AppRoutes.employeeTaskList);
     }
 
     React.useEffect(() => {

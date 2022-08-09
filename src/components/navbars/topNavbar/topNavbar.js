@@ -47,7 +47,7 @@ export const TopNavBar = (props) => {
 
     return (
         <div className={classes.grow}>
-            <AppBar position="static" className={classes.appBar}>
+            <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
 
                     <IconButton className={classes.menuIcon} onClick={toogleSideNavBar} size="large">
@@ -87,6 +87,7 @@ export const TopNavBar = (props) => {
 
                 </Toolbar>
             </AppBar>
+            <Toolbar />
         </div>
     );
 }
