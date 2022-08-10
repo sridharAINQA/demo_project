@@ -13,6 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { LoginSuccess } from "../../router/access";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { actions } from "timesheet-binder";
+import { useDispatch } from "react-redux";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,8 +26,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const { GET_USER_BY_USERNAME_PASSWORD } = actions;
+
 export const Login = (props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+
   const classes = useStyles();
 
   // States
@@ -53,29 +61,51 @@ export const Login = (props) => {
   const onLogin = () => {
     debugger;
     if (!validateForm()) return;
-    localStorage.setItem(LocalStorageKeys.authToken, "authtoken");
 
-    if (state.email === "admin@gmail.com") {
-      localStorage.setItem(LocalStorageKeys.role, UserRoles.admin);
-    } else {
-      localStorage.setItem(LocalStorageKeys.role, UserRoles.employee);
-    }
+    Promise.resolve(
+      dispatch(
+        GET_USER_BY_USERNAME_PASSWORD({
+          mailID: state.email,
+          password: state.password,
+        })
+      )
+    ).then((res) => {
+      enqueueSnackbar("Successfully logged in", { variant: "success" });
+      debugger;
+      if (res?.payload?.data?.result?.length > 0) {
+        const user = res.payload.data.result[0];
+        if (user?.roleID === "Role/10001") {
+          // Set the user role and mailID in the local storage
+          localStorage.setItem(LocalStorageKeys.role, UserRoles.manager);
+          localStorage.setItem(LocalStorageKeys.userID, user.mailID);
 
-    // debugger;
+          // Redirect the user to the authorized route
+          navigate(LoginSuccess(UserRoles.manager));
+        } else if (user?.roleID === "Role/10000") {
+          // Set the user role and mailID in the local storage
+          localStorage.setItem(LocalStorageKeys.role, UserRoles.employee);
+          localStorage.setItem(LocalStorageKeys.userID, user.mailID);
 
-    // if (localStorage.getItem(LocalStorageKeys.role) === "admin") {
-    //   navigate(AppRoutes.taskLogs);
-    // } else if (localStorage.getItem(LocalStorageKeys.role) === "employee") {
-    //   navigate(AppRoutes.employeeTaskList);
-    // }
+          // Redirect the user to the authorized route
+          navigate(LoginSuccess(UserRoles.employee));
+        } else {
+          // NOTE: notistack
+          enqueueSnackbar("Invalid user", { variant: "error" });
+        }
+      }
+    });
   };
 
-  React.useEffect(() => {
-    if (localStorage.getItem(LocalStorageKeys.authToken)) {
-      navigate(LoginSuccess(localStorage.getItem(LocalStorageKeys.role)));
-    }
-    console.log("here");
-  });
+  // React.useEffect(() => {
+  //   if (localStorage.getItem(LocalStorageKeys.role)) {
+  //     const myRoutes = LoginSuccess(
+  //       localStorage.getItem(LocalStorageKeys.role)
+  //     );
+  //     debugger;
+  //     // navigate();
+  //   }
+  //   console.log("here");
+  // });
 
   const handleChange = (event, key) => {
     setState((prevState) => ({

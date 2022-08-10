@@ -16,7 +16,7 @@ export const Redirections = (userRole) => {
  */
 export const LoginSuccess = (userRole) => {
   switch (userRole) {
-    case UserRoles.admin:
+    case UserRoles.manager:
       return AppRoutes.taskLogs;
     case UserRoles.employee:
       return AppRoutes.employeeTaskList;
@@ -25,7 +25,7 @@ export const LoginSuccess = (userRole) => {
   }
 };
 
-export const AdminRoutes = {
+export const ManagerRoutes = {
   taskLogs: AppRoutes.taskLogs,
 };
 
@@ -40,8 +40,8 @@ export const EmployeeRoutes = {
  */
 export const Access = (userRole, path) => {
   switch (userRole) {
-    case UserRoles.admin:
-      return [...Object.values(AdminRoutes)].indexOf(path);
+    case UserRoles.manager:
+      return [...Object.values(ManagerRoutes)].indexOf(path);
     case UserRoles.employee:
       return [...Object.values(EmployeeRoutes)].indexOf(path);
     default:

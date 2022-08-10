@@ -6,7 +6,7 @@ import { LocalStorageKeys } from "../utils";
 
 const PrivateRoute = ({ path, children, ...rest }) => {
   const isAuthenticated = (path) => {
-    if (localStorage.getItem(LocalStorageKeys.authToken)) {
+    if (localStorage.getItem(LocalStorageKeys.role)) {
       const role = localStorage.getItem(LocalStorageKeys.role);
       const _ = Access(role, path);
       if (_ >= 0) {

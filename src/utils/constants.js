@@ -4,7 +4,7 @@
  */
 export const UserRoles = {
   role: "role",
-  admin: "admin",
+  manager: "manager",
   employee: "employee",
 };
 
@@ -73,6 +73,7 @@ export let LocalStorageKeys = {
   authToken: "auth_token",
   version: "version",
   role: "role",
+  userID: "user_id",
 };
 
 // To build version string

@@ -44,7 +44,8 @@ export const TopNavBar = (props) => {
   });
 
   const handleLogout = () => {
-    localStorage.removeItem(LocalStorageKeys.authToken);
+    localStorage.clear();
+    // localStorage.removeItem(LocalStorageKeys.role);
     navigate(AppRoutes.login);
   };
 
@@ -86,7 +87,9 @@ export const TopNavBar = (props) => {
           >
             <Stack>
               <Typography variant="body1">Welcome,</Typography>
-              <Typography variant="body2">JohnDoe@gmail.com</Typography>
+              <Typography variant="body2">
+                {localStorage.getItem(LocalStorageKeys.userID)}
+              </Typography>
             </Stack>
 
             <IconButton
