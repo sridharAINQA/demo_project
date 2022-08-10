@@ -3,6 +3,10 @@ import { Stack, TextField, Button } from "@mui/material";
 import PageHead from "../../../components/pageHead";
 import { withContainer, withNavBars, withRouter } from "../../../HOCs";
 import { AppRoutes } from "../../../router/routes";
+import { LocalStorageKeys } from "../../../utils";
+import { actions } from "timesheet-binder";
+import { connect } from "react-redux";
+import { withSnackbar } from "notistack";
 
 class EmployeeTaskAddEdit extends React.Component {
   constructor(props) {
@@ -11,7 +15,14 @@ class EmployeeTaskAddEdit extends React.Component {
       title: "",
       duration: "",
       error: [],
+      user: {},
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      user: JSON.parse(localStorage.getItem(LocalStorageKeys.user)),
+    });
   }
 
   validateForm = () => {
@@ -31,7 +42,31 @@ class EmployeeTaskAddEdit extends React.Component {
   };
 
   handleUpsert = () => {
-    this.validateForm();
+    if (!this.validateForm()) {
+      return;
+    }
+
+    Promise.resolve(
+      this.props.UPSERT_TASK({
+        // _key: "",
+        title: this.state.title,
+        empID: this.state.user?._id,
+        duration: this.state.duration,
+      })
+    )
+      .then((res) => {
+        if (res?.payload?.data?.Code === 201) {
+          this.props.enqueueSnackbar("Task added successfully", {
+            variant: "success",
+          });
+          this.props.navigate(AppRoutes.employeeTaskList);
+        }
+      })
+      .catch((err) => {
+        this.props.enqueueSnackbar("Failed to add task", {
+          variant: "error",
+        });
+      });
   };
 
   handleChange = (event, key) => {
@@ -104,4 +139,14 @@ class EmployeeTaskAddEdit extends React.Component {
   }
 }
 
-export default withRouter(withNavBars(withContainer(EmployeeTaskAddEdit)));
+const mapStateToProps = (state) => {
+  debugger;
+  return {
+    upsertTask: state?.rootReducer?.mainSlice?.upsertTask,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actions
+)(withRouter(withContainer(withNavBars(withSnackbar(EmployeeTaskAddEdit)))));

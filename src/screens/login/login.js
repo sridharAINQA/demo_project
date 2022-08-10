@@ -58,6 +58,13 @@ export const Login = (props) => {
     return error?.length === 0;
   };
 
+  const storeUserInStorage = (user) => {
+    let storeUser = { ...user };
+    delete storeUser.password;
+
+    localStorage.setItem(LocalStorageKeys.user, JSON.stringify(storeUser));
+  };
+
   const onLogin = () => {
     debugger;
     if (!validateForm()) return;
@@ -75,16 +82,18 @@ export const Login = (props) => {
       if (res?.payload?.data?.result?.length > 0) {
         const user = res.payload.data.result[0];
         if (user?.roleID === "Role/10001") {
-          // Set the user role and mailID in the local storage
+          // Set the user role and user in the local storage
           localStorage.setItem(LocalStorageKeys.role, UserRoles.manager);
-          localStorage.setItem(LocalStorageKeys.userID, user.mailID);
+
+          storeUserInStorage(user);
 
           // Redirect the user to the authorized route
           navigate(LoginSuccess(UserRoles.manager));
         } else if (user?.roleID === "Role/10000") {
           // Set the user role and mailID in the local storage
           localStorage.setItem(LocalStorageKeys.role, UserRoles.employee);
-          localStorage.setItem(LocalStorageKeys.userID, user.mailID);
+
+          storeUserInStorage(user);
 
           // Redirect the user to the authorized route
           navigate(LoginSuccess(UserRoles.employee));

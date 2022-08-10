@@ -3,15 +3,17 @@ import { Stack, Typography, IconButton, Paper } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-function TaskCard() {
+function TaskCard({ title, status, handEditClick, handleDeleteClick }) {
   return (
     <Paper sx={{ p: 2 }}>
       <Stack direction={"row"} justifyContent="space-between">
         <Stack>
           <Typography variant="h5" gutterBottom>
-            Task Title
+            {title}
           </Typography>
-          <Typography variant="body1">Status: Pending</Typography>
+          <Typography variant="body1">
+            Status: {status?.charAt(0).toUpperCase() + status?.slice(1)}
+          </Typography>
         </Stack>
 
         <Stack
@@ -19,10 +21,10 @@ function TaskCard() {
           justifyContent="space-between"
           alignItems="center"
         >
-          <IconButton sx={{ flex: 1 }}>
+          <IconButton onClick={handEditClick}>
             <EditIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={handleDeleteClick}>
             <DeleteIcon />
           </IconButton>
         </Stack>

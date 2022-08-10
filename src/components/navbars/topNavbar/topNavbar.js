@@ -88,7 +88,7 @@ export const TopNavBar = (props) => {
             <Stack>
               <Typography variant="body1">Welcome,</Typography>
               <Typography variant="body2">
-                {localStorage.getItem(LocalStorageKeys.userID)}
+                {JSON.parse(localStorage.getItem(LocalStorageKeys.user)).mailID}
               </Typography>
             </Stack>
 

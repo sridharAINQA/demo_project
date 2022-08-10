@@ -73,7 +73,7 @@ export let LocalStorageKeys = {
   authToken: "auth_token",
   version: "version",
   role: "role",
-  userID: "user_id",
+  user: "user",
 };
 
 // To build version string
