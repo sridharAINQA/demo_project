@@ -82,3 +82,9 @@ export const VersionFetchURL = `${window.location.protocol}//${
 }${
   window.location.port ? ":" + window.location.port : ""
 }/meta.json?v=${+new Date()}`;
+
+export const TASK_LOG_STATUS = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+};

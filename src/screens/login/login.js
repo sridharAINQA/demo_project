@@ -76,33 +76,38 @@ export const Login = (props) => {
           password: state.password,
         })
       )
-    ).then((res) => {
-      enqueueSnackbar("Successfully logged in", { variant: "success" });
-      debugger;
-      if (res?.payload?.data?.result?.length > 0) {
-        const user = res.payload.data.result[0];
-        if (user?.roleID === "Role/10001") {
-          // Set the user role and user in the local storage
-          localStorage.setItem(LocalStorageKeys.role, UserRoles.manager);
+    )
+      .then((res) => {
+        if (res?.payload?.data?.result?.length > 0) {
+          enqueueSnackbar("Successfully logged in", { variant: "success" });
+          const user = res.payload.data.result[0];
+          if (user?.roleID === "Role/10001") {
+            // Set the user role and user in the local storage
+            localStorage.setItem(LocalStorageKeys.role, UserRoles.manager);
 
-          storeUserInStorage(user);
+            storeUserInStorage(user);
 
-          // Redirect the user to the authorized route
-          navigate(LoginSuccess(UserRoles.manager));
-        } else if (user?.roleID === "Role/10000") {
-          // Set the user role and mailID in the local storage
-          localStorage.setItem(LocalStorageKeys.role, UserRoles.employee);
+            // Redirect the user to the authorized route
+            navigate(LoginSuccess(UserRoles.manager));
+          } else if (user?.roleID === "Role/10000") {
+            // Set the user role and mailID in the local storage
+            localStorage.setItem(LocalStorageKeys.role, UserRoles.employee);
 
-          storeUserInStorage(user);
+            storeUserInStorage(user);
 
-          // Redirect the user to the authorized route
-          navigate(LoginSuccess(UserRoles.employee));
+            // Redirect the user to the authorized route
+            navigate(LoginSuccess(UserRoles.employee));
+          } else {
+            // NOTE: notistack
+            enqueueSnackbar("Invalid user", { variant: "error" });
+          }
         } else {
-          // NOTE: notistack
-          enqueueSnackbar("Invalid user", { variant: "error" });
+          throw new Error("Invalid Credentials");
         }
-      }
-    });
+      })
+      .catch((err) => {
+        enqueueSnackbar(err.message, { variant: "error" });
+      });
   };
 
   // React.useEffect(() => {
