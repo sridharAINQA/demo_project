@@ -21,7 +21,11 @@ class EmployeeTaskList extends React.Component {
   }
 
   handEditClick = (_key) => {
-    this.props.navigate(AppRoutes.employeeTaskAddEdit);
+    this.props.navigate(AppRoutes.employeeTaskAddEdit, {
+      state: {
+        _key,
+      },
+    });
   };
 
   handleDeleteClick = (_key) => {
@@ -54,19 +58,20 @@ class EmployeeTaskList extends React.Component {
         />
 
         {/* Task List */}
-        <Stack gap={2} mt={3}>
+        <Stack gap={4} mt={3}>
           {Array.isArray(tasksByEmployeeId) && tasksByEmployeeId?.length > 0 ? (
             tasksByEmployeeId?.map((item) => (
               <TaskCard
                 key={item?._key}
                 title={item?.title}
                 status={item?.status}
+                duration={item?.duration}
                 handEditClick={() => this.handEditClick(item?._key)}
                 handleDeleteClick={() => this.handleDeleteClick(item?._key)}
               />
             ))
           ) : (
-            <Typography variant="body1" align="center" sx={{my: 4}}>
+            <Typography variant="body1" align="center" sx={{ my: 4 }}>
               No Tasks added yet
             </Typography>
           )}

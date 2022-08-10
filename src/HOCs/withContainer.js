@@ -3,7 +3,7 @@ import React from "react";
 
 const withContainer = (Component) => (props) => {
   return (
-    <Box my={2}>
+    <Box mt={6} mb={2}>
       <Container maxWidth="md">
         <Component {...props}>{props.children}</Component>
       </Container>

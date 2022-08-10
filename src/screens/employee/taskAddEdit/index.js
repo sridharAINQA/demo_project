@@ -16,6 +16,7 @@ class EmployeeTaskAddEdit extends React.Component {
       duration: "",
       error: [],
       user: {},
+      isEdit: false,
     };
   }
 
@@ -23,6 +24,31 @@ class EmployeeTaskAddEdit extends React.Component {
     this.setState({
       user: JSON.parse(localStorage.getItem(LocalStorageKeys.user)),
     });
+
+    if (this.props.location.state?._key) {
+      this.setState({
+        isEdit: true,
+      });
+
+      // Edit Mode - So fetch the task details and populate the form
+      Promise.resolve(
+        this.props.GET_TASK_BY_ID({ taskKey: this.props.location.state?._key })
+      )
+        .then((res) => {
+          if (res?.payload?.data?.Code === 201) {
+            const task = res?.payload?.data?.result?.[0];
+            this.setState({
+              title: task?.title,
+              duration: task?.duration,
+            });
+          }
+        })
+        .catch((err) => {
+          this.props.enqueueSnackbar("Failed to fetch task details", {
+            variant: "error",
+          });
+        });
+    }
   }
 
   validateForm = () => {
@@ -48,7 +74,7 @@ class EmployeeTaskAddEdit extends React.Component {
 
     Promise.resolve(
       this.props.UPSERT_TASK({
-        // _key: "",
+        ...(this.state.isEdit ? { _key: this.props.location.state?._key } : {}),
         title: this.state.title,
         empID: this.state.user?._id,
         duration: this.state.duration,
@@ -56,16 +82,24 @@ class EmployeeTaskAddEdit extends React.Component {
     )
       .then((res) => {
         if (res?.payload?.data?.Code === 201) {
-          this.props.enqueueSnackbar("Task added successfully", {
-            variant: "success",
-          });
+          this.props.enqueueSnackbar(
+            this.state.isEdit
+              ? "Task updated successfully"
+              : "Task added successfully",
+            {
+              variant: "success",
+            }
+          );
           this.props.navigate(AppRoutes.employeeTaskList);
         }
       })
       .catch((err) => {
-        this.props.enqueueSnackbar("Failed to add task", {
-          variant: "error",
-        });
+        this.props.enqueueSnackbar(
+          this.state.isEdit ? "Failed to update task" : "Failed to add task",
+          {
+            variant: "error",
+          }
+        );
       });
   };
 
@@ -130,7 +164,7 @@ class EmployeeTaskAddEdit extends React.Component {
               color="primary"
               onClick={this.handleUpsert}
             >
-              Save
+              {this.state.isEdit ? "Update" : "Save"}
             </Button>
           </Stack>
         </Stack>
@@ -139,12 +173,9 @@ class EmployeeTaskAddEdit extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  debugger;
-  return {
-    upsertTask: state?.rootReducer?.mainSlice?.upsertTask,
-  };
-};
+const mapStateToProps = (state) => ({
+  upsertTask: state?.rootReducer?.mainSlice?.upsertTask,
+});
 
 export default connect(
   mapStateToProps,
